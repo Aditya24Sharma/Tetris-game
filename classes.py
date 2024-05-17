@@ -6,7 +6,10 @@ from variables import *
 
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 
+#Shape class
 class Shape:
+
+    # The values for each shape is based on a 4x4 grid with values from 0-15
     VERSION = {
         'I': [[1, 5, 9, 13], [4, 5, 6, 7]],
         'Z': [[4, 5, 9, 10], [2, 6, 5, 9]],
@@ -18,7 +21,6 @@ class Shape:
     }
     SHAPES = ['I', 'Z', 'S', 'L', 'J', 'T', 'O']
  
-    #init
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -48,30 +50,34 @@ class Tetris:
         self.end = False
         self.new_shape()
 
+    #Draw lines for grid
     def make_grid(self):
         for i in range(self.rows + 1):
             pygame.draw.line(SCREEN, GRID, (0, CELL*i), (WIDTH, CELL*i))
         for j in range(self.cols + 1):
             pygame.draw.line(SCREEN, GRID, (CELL*j, 0), (CELL * j, (HEIGHT - 120))) 
 
+    #Create new shape
     def new_shape(self):
         if not self.next:
             self.next = Shape(5,0)
         self.figure = self.next
         self.next = Shape(5,0)
 
+    #Checking collision
     def collision(self):
         for i in range(4):
             for j in range(4):
                 if(i*4 + j) in self.figure.image():
+                    #block_row and block_col are to check for where the shape is 
                     block_row = i + self.figure.y 
                     block_col = j + self.figure.x
-                    # print(f'BR = {block_row} and BC = {block_col}')
                     if(block_row >= self.rows or block_col >= self.cols or block_col<0 or self.grid[block_row][block_col]>0):
                         return True
         
         return False
     
+    #freezes the shape on the grid by assigning values based on the color
     def freeze(self):
         for i in range(4):
             for j in range(4):
@@ -81,9 +87,11 @@ class Tetris:
 
         self.remove_row()
         self.new_shape()
+        #Check if the shape has reached the top
         if self.collision():
             self.end = True
     
+    #remove rows which are complete
     def remove_row(self):
         rerun = False
         for y in range(self.rows-1, 0, -1):
@@ -134,6 +142,7 @@ class Tetris:
         if self.collision():
             self.figure.orientation = orientation
 
+    #end screen 
     def end_game(self):
         popup = pygame.Rect(50, 140, WIDTH - 100, HEIGHT - 350)
         pygame.draw.rect(SCREEN, BLACK, popup)

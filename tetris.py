@@ -17,11 +17,13 @@ def main():
     while run:
         SCREEN.fill(BG_COLOR)
 
+        #running each events in pygame
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 sys.exit()
         
+        #check key values
         keys = pygame.key.get_pressed()
         if not tetris.end:
             if keys[pygame.K_LEFT]:
@@ -52,10 +54,12 @@ def main():
                         SCREEN.blit(shape, (x,y))
                         pygame.draw.rect(SCREEN, WHITE, (x,y,CELL, CELL), 1)
         
+        #for constant speed of the screen
         counter += 1
         if counter >= 15000:
             counter = 0
 
+        #move the shape
         if move:
             if counter % (FPS//(tetris.level*2)) == 0:
                 if not tetris.end:
@@ -84,10 +88,12 @@ def main():
                         y = HEIGHT- 100 + CELL * (tetris.next.y + i)
                         SCREEN.blit(image, (x,y))
 
+        #checking for end game
         if tetris.end:
             tetris.end_game()
 
 
+        #Stats
         score_text = font.render(f'{tetris.score}', True, WHITE)
         level_text = font2.render(f'Level: {tetris.level}', True, WHITE)
         SCREEN.blit(score_text, (250- score_text.get_width()//2, HEIGHT-110))
